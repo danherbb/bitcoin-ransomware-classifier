@@ -2,9 +2,20 @@
 
 ## Overview
 
-This project classifies Bitcoin addresses as ransomware-related or legitimate by modeling transaction-behavior features from the BitcoinHeist dataset.
+This project builds a machine learning classifier to identify whether a Bitcoin address is associated with ransomware activity or legitimate use, using behavioral features from the BitcoinHeist dataset.
 
-The workflow is notebook-based and is designed to run well in Google Colab, with optional GPU acceleration for supported preprocessing and model-training steps.
+The project focuses on evaluating how different modeling decisions impact performance in a highly imbalanced classification problem. In particular, we explore:
+
+```text
+- Tree-based models (Decision Tree, Random Forest, Gradient Boosting)
+- Class imbalance handling (SMOTE vs original data)
+- Dimensionality reduction (PCA)
+- Model tuning and threshold optimization
+- Advanced modeling using XGBoost
+```
+
+Our final model uses XGBoost trained on the original dataset with threshold tuning, achieving the best balance between precision and recall.
+
 
 ## Dataset
 
@@ -12,6 +23,10 @@ This project uses the BitcoinHeist Ransomware Dataset from Kaggle:
 
 [BitcoinHeist Ransomware Dataset](https://www.kaggle.com/datasets/sapere0/bitcoinheist-ransomware-dataset)
 
+- ~2.9 million records  
+- Features derived from transaction graphs (provided in tabular form)  
+- Highly imbalanced target (ransomware is rare)
+  
 Download the dataset manually and place it in the project's `data/` folder before running the notebooks.
 
 ## Recommended Environment
@@ -80,29 +95,35 @@ If you want to run the notebooks from Google Drive, place the repository at:
 /content/drive/MyDrive/bitcoin-ransomware-classifier
 ```
 
-## Expected Project Structure
+## Project Structure
 
 ```text
 bitcoin-ransomware-classifier/
 ├── data/
 ├── notebooks/
+│ ├── 01_data_exploration_preprocessing.ipynb
+│ ├── 02_feature_engineering_and_preparation.ipynb
+│ ├── 03_preliminary_modeling.ipynb
+│ ├── 04_hyperparameter_tuning.ipynb
+│ └── 05_targeted_xgb_tuning.ipynb
 ├── README.md
 └── requirements.txt
 ```
+
+## Workflow Overview
+
+Data → Preprocessing → Feature Engineering → Splitting → Modeling → Evaluation → Refinement
+
 
 ## Notebook Order
 
 Run the notebooks in this order:
 
-1. `notebooks/01_data_exploration_preprocessing.ipynb`
-2. `notebooks/02_feature_engineering_and_preparation.ipynb`
-3. `notebooks/04_hyperparameter_tuning.ipynb`
-
-Optional:
-
-4. `notebooks/03_preliminary_modeling.ipynb`
-
-Notebook 3 is helpful for quick baseline comparisons, but notebook 4 is the main tuning and final-evaluation workflow.
+1. `notebooks/01_data_exploration_preprocessing.ipynb`  
+2. `notebooks/02_feature_engineering_and_preparation.ipynb`  
+3. `notebooks/03_preliminary_modeling.ipynb`  
+4. `notebooks/04_hyperparameter_tuning.ipynb`  
+5. `notebooks/05_targeted_xgb_tuning.ipynb`  
 
 ## Notebook Summary
 
@@ -149,6 +170,17 @@ This notebook:
 - tunes thresholds without retraining the fitted models
 - saves summary CSV outputs back to `data/`
 
+### 5. Targeted XGBoost Tuning 
+`notebooks/05_targeted_xgb_tuning.ipynb`
+
+This notebook:
+
+- Introduces XGBoost as an advanced model  
+- Compares performance against previous models  
+- Analyzes overfitting and generalization  
+- Applies threshold tuning for final model selection  
+- Produces final evaluation metrics  
+
 ## Files Saved by the Pipeline
 
 Notebook 2 saves prepared splits such as:
@@ -193,3 +225,24 @@ Then:
 1. restart the runtime
 2. place the dataset in `data/`
 3. run notebooks `1 -> 2 -> 4`
+
+## Final Results
+
+The best-performing model was XGBoost trained on the original (imbalanced) dataset with hyperparameter tuning and threshold optimization.
+
+Final performance:
+
+- Precision ≈ 0.45  
+- Recall ≈ 0.45  
+- F1 Score ≈ 0.45  
+
+These results reflect a balanced tradeoff between detecting ransomware activity and minimizing false positives.
+
+
+## Key Findings
+
+- PCA reduced performance by removing important behavioral signals  
+- SMOTE improved recall but introduced overfitting  
+- Tree-based models tended to overfit on balanced data  
+- XGBoost trained on the original dataset provided the best generalization  
+- Threshold tuning improved the balance between precision and recall  
