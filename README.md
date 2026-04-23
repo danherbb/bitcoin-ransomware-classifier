@@ -211,19 +211,24 @@ Notebook 4 saves model-selection outputs such as:
 
 ## Quick Start
 
-If you want the shortest Colab setup path:
+If you want the shortest setup path, open a new notebook in Colab and run the following commands:
 
 ```bash
-!git clone --branch dev https://github.com/danherbb/bitcoin-ransomware-classifier.git
-%cd bitcoin-ransomware-classifier
-!pip install -r requirements.txt
-!pip install cudf-cu12 cuml-cu12 --extra-index-url=https://pypi.nvidia.com
+from google.colab import drive
+drive.mount('/content/drive')
 ```
 
+Then, run these commands in a second cell:
+
+```bash
+%%bash
+cd /content/drive/MyDrive/
+git clone https://github.com/danherbb/bitcoin-ransomware-classifier.git
+```
 Then:
 
-1. restart the runtime
-2. place the dataset in `data/`
+1. locate the folder titled "bitcoin-ransomware-classifier" in you drive.
+2. place the dataset at "https://www.kaggle.com/datasets/sapere0/bitcoinheist-ransomware-dataset" in `data/`
 3. run notebooks `1 -> 2 -> 4`
 
 ## Final Results
